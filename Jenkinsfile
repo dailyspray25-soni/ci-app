@@ -8,4 +8,12 @@ pipeline {
             }
         }
     }
+
+
+post {
+        success {
+            archiveArtifacts artifacts: 'target/*.jar', fingerprint: true
+        }
+    }
 }
+
