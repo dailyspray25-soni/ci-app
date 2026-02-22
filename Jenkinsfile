@@ -7,13 +7,17 @@ pipeline {
                 sh 'mvn clean package'
             }
         }
+
+        stage('Deploy') {
+            steps {
+                sh 'cp target/*.jar /opt/app/'
+            }
+        }
     }
 
-
-post {
+    post {
         success {
             archiveArtifacts artifacts: 'target/*.jar', fingerprint: true
         }
     }
 }
-
