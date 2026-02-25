@@ -2,18 +2,28 @@ pipeline {
     agent any
 
     stages {
-        stage('Build') {
+        stage('Build JAR') {
             steps {
                 sh 'mvn clean package'
             }
         }
 
-        stage('Deploy') {
+     stage('Build Docker Image') {
             steps {
-                sh 'cp target/*.jar /opt/app/'
+                sh 'docker build -t ci-app-image .'
             }
         }
+
+     stage('Deploy Container') {
+       steps {
+         sh 'docker stop ci-app || true'
+         sh 'docker rm ci-app || true'
+         sh 'docker run -d --name ci-app ci-app-image'
+       }
+      }
+     }
     }
+
 
     post {
         success {
